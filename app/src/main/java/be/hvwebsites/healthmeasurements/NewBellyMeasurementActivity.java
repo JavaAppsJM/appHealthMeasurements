@@ -52,10 +52,10 @@ public class NewBellyMeasurementActivity extends AppCompatActivity {
                     Toast.makeText(NewBellyMeasurementActivity.this,
                             "Nothing entered, nothing saved !", Toast.LENGTH_LONG).show();
                 }else{
-                    String dateString = dateView.getText()
-                            .delete(5,5)
-                            .delete(2,2)
-                            .toString();
+                    String dateString = dateView.getText().toString();
+//                    String[] dateStringParts = dateTempString.split("/");
+//
+//                    String dateString = dateStringParts[0] + dateStringParts[1] + dateStringParts[2];
                     Belly belly = new Belly(dateString,
                             Float.parseFloat(String.valueOf(radiusView.getText())));
                     Toast.makeText(NewBellyMeasurementActivity.this,

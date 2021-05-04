@@ -19,10 +19,25 @@ public class Belly {
     private float bellyRadius;
     @ColumnInfo(name = "remark")
     private String remark; // initieel niet gebruikt
+    @ColumnInfo(name = "dateint")
+    private int dateInt;
 
     public Belly(String date, float bellyRadius) {
-        this.date = date;
+        String[] dateStringParts = date.split("/");
+        String day = this.leadingZero(dateStringParts[0]);
+        String month = this.leadingZero(dateStringParts[1]);
+        String year = dateStringParts[2];
+        this.date = day + month + year;
         this.bellyRadius = bellyRadius;
+        this.dateInt = Integer.parseInt(date);
+    }
+
+    public String leadingZero(String string){
+        if (Integer.parseInt(string) < 10){
+            return  "0" + string;
+        }else {
+            return string;
+        }
     }
 
     public String getDate() {
@@ -47,6 +62,14 @@ public class Belly {
 
     public void setBellyRadius(float bellyRadius) {
         this.bellyRadius = bellyRadius;
+    }
+
+    public int getDateInt() {
+        return dateInt;
+    }
+
+    public void setDateInt(int dateInt) {
+        this.dateInt = dateInt;
     }
 
     @Override
