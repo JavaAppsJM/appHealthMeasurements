@@ -53,17 +53,15 @@ public class NewBellyMeasurementActivity extends AppCompatActivity {
                             "Nothing entered, nothing saved !", Toast.LENGTH_LONG).show();
                 }else{
                     String dateString = dateView.getText().toString();
-//                    String[] dateStringParts = dateTempString.split("/");
-//
-//                    String dateString = dateStringParts[0] + dateStringParts[1] + dateStringParts[2];
                     Belly belly = new Belly(dateString,
                             Float.parseFloat(String.valueOf(radiusView.getText())));
                     Toast.makeText(NewBellyMeasurementActivity.this,
-                            "New belly measurement saved ! " + belly.toString(), Toast.LENGTH_LONG).show();
+                            "New belly measurement saved ! " + belly.toString(),
+                            Toast.LENGTH_LONG).show();
                     replyIntent.putExtra(EXTRA_INTENT_KEY_DATE, dateString);
-                    replyIntent.putExtra(EXTRA_INTENT_KEY_RADIUS, Float.parseFloat(String.valueOf(radiusView.getText())));
+                    replyIntent.putExtra(EXTRA_INTENT_KEY_RADIUS,
+                            Float.parseFloat(String.valueOf(radiusView.getText())));
                     setResult(RESULT_OK, replyIntent);
-//                    bellyViewModel.insertBelly(belly);
                 }
                 finish();
             }

@@ -29,11 +29,11 @@ public class Belly {
         String year = dateStringParts[2];
         this.date = day + month + year;
         this.bellyRadius = bellyRadius;
-        this.dateInt = Integer.parseInt(date);
+        this.dateInt = Integer.parseInt(year + month + day);
     }
 
     public String leadingZero(String string){
-        if (Integer.parseInt(string) < 10){
+        if (Integer.parseInt(string) < 10 && string.length() < 2){
             return  "0" + string;
         }else {
             return string;
@@ -41,7 +41,10 @@ public class Belly {
     }
 
     public String getDate() {
-        return date;
+        String day = date.substring(0,2);
+        String month = date.substring(2,4);
+        String year = date.substring(4);
+        return day + "/" + month + "/" + year;
     }
 
     public float getBellyRadius() {
@@ -78,6 +81,7 @@ public class Belly {
                 "date='" + date + '\'' +
                 ", bellyRadius=" + bellyRadius +
                 ", remark='" + remark + '\'' +
+                ", dateInt=" + dateInt +
                 '}';
     }
 }

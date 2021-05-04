@@ -24,6 +24,6 @@ public interface BellyDAO {
     @Delete
     void deleteBellyMeasurement(Belly belly);
 
-    @Query("SELECT * from belly_radius ORDER BY date DESC")
+    @Query("SELECT * from belly_radius ORDER BY dateint DESC")
     LiveData<List<Belly>> getAllBellys();
 }
