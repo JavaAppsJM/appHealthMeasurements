@@ -9,7 +9,14 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.HealthMeasurements">
-        <activity android:name=".NewBellyMeasurementActivity"></activity>
+        <activity
+            android:name=".UpdateBellyMActivity"
+            android:label="@string/title_update_belly">
+        </activity>
+        <activity
+            android:name=".NewBellyMeasurementActivity"
+            android:label="@string/title_new_belly">
+        </activity>
         <activity
             android:name=".BellyActivity"
             android:label="@string/title_activity_belly"

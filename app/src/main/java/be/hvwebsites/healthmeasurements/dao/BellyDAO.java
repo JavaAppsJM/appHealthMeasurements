@@ -18,8 +18,8 @@ public interface BellyDAO {
     @Insert(onConflict = OnConflictStrategy.ROLLBACK)
     void insertBellyMeasurement(Belly belly);
 
-    @Query("UPDATE belly_radius SET bellyradius = :newRadius WHERE date = :udate")
-    void updateBellyMeasurement(String udate, float newRadius);
+    @Query("UPDATE belly_radius SET bellyradius = :newRadius WHERE dateint = :udate")
+    void updateBellyMeasurement(int udate, float newRadius);
 
     @Delete
     void deleteBellyMeasurement(Belly belly);

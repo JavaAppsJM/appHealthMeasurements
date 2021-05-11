@@ -23,6 +23,8 @@ import be.hvwebsites.healthmeasurements.viewmodels.BellyViewModel;
 public class NewBellyMeasurementActivity extends AppCompatActivity {
     private EditText dateView;
     private EditText radiusView;
+    public static final String EXTRA_INTENT_KEY_ACTION =
+            "be.hvwebsites.healthmeasurements.INTENT_KEY_ACTION";
     public static final String EXTRA_INTENT_KEY_DATE =
             "be.hvwebsites.healthmeasurements.INTENT_KEY_DATE";
     public static final String EXTRA_INTENT_KEY_RADIUS =
@@ -33,20 +35,18 @@ public class NewBellyMeasurementActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_belly_measurement);
-
-/*
-        LocalDate currentDate = LocalDate.now();
-        Calendar.getInstance().getTime().
-        dateView = findViewById(R.id.editTextDate);
-        dateView.setText(currentDate.toString());
-*/
         dateView = findViewById(R.id.editTextDate);
         radiusView = findViewById(R.id.editNumberRadius);
         final Button addbutton = findViewById(R.id.addNewBelly);
         addbutton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // replyintent vr startActivityForResult
                 Intent replyIntent = new Intent();
+                // replyintent vr gewone startActivity is niet meer nodig
+                // je kan NewBelly niet gebruiken vr update vermits datum niet mag wijzigen !!
+                //Intent replyIntent = new Intent(NewBellyMeasurementActivity.this,
+                //        BellyActivity.class);
                 if (TextUtils.isEmpty(dateView.getText()) ||
                 TextUtils.isEmpty(radiusView.getText())){
                     Toast.makeText(NewBellyMeasurementActivity.this,
@@ -61,12 +61,18 @@ public class NewBellyMeasurementActivity extends AppCompatActivity {
                     replyIntent.putExtra(EXTRA_INTENT_KEY_DATE, dateString);
                     replyIntent.putExtra(EXTRA_INTENT_KEY_RADIUS,
                             Float.parseFloat(String.valueOf(radiusView.getText())));
+                    // Bepalen of er moet geupdate of geinsert worden obv wat er via de intent binnenkomt
+                    // is niet langer nodig gezien update niet langs hier mag komen !!
+//                    Intent intentAction = getIntent();
+//                    replyIntent.putExtra(EXTRA_INTENT_KEY_ACTION,
+//                            intentAction.getStringExtra(EXTRA_INTENT_KEY_ACTION));
+                    //startActivity(replyIntent);
+                    // setResult vr startActivityForResult
                     setResult(RESULT_OK, replyIntent);
                 }
                 finish();
             }
         });
-
     }
 
     public void showDatePicker(View view) {

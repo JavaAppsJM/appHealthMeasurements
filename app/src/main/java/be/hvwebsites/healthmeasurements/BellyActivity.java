@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -28,6 +27,8 @@ import be.hvwebsites.healthmeasurements.viewmodels.BellyViewModel;
 public class BellyActivity extends AppCompatActivity {
     private BellyViewModel bellyViewModel;
     public static final int INTENT_REQUEST_CODE = 1;
+    public static final String EXTRA_INTENT_KEY_ACTION =
+            "be.hvwebsites.healthmeasurements.INTENT_KEY_ACTION";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +43,12 @@ public class BellyActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(BellyActivity.this,
                         NewBellyMeasurementActivity.class);
+                // als je antwoord terug verwacht, het antwoord wordt verwerkt in onActivityResult
                 startActivityForResult(intent,INTENT_REQUEST_CODE);
+                // omdat forResult niet werkt bij update via viewHolder gaan we met een gewone startActivity werken
+                // maar in comment gezet omdat de activity voor een update geen datum wijziging mag hebben dus hiervoor hebben we een aparte activity nodig
+                // intent.putExtra(EXTRA_INTENT_KEY_ACTION, "insert");
+                // startActivity(intent);
             }
         });
 
@@ -80,7 +86,7 @@ public class BellyActivity extends AppCompatActivity {
                 int position = viewHolder.getAdapterPosition();
                 Belly sBelly = adapter.getBellyAtPosition(position);
                 Toast.makeText(BellyActivity.this,
-                        "Deleting belly measurement on " + sBelly.getDate(),
+                        "Deleting belly measurement on " + sBelly.getFormatDate(),
                         Toast.LENGTH_LONG).show();
                 // Delete Belly measurement
                 bellyViewModel.deleteBelly(sBelly);
@@ -88,10 +94,20 @@ public class BellyActivity extends AppCompatActivity {
         });
         helper.attachToRecyclerView(recyclerView);
 
-        // om te detecteren dat d(elete) is ingedrukt
-
+        // verwerken replyIntent vn UpdateBelly vr update
+        Intent newBellyIntent = getIntent();
+        if (newBellyIntent.hasExtra(EXTRA_INTENT_KEY_ACTION)){
+            Belly belly = new Belly(
+                    newBellyIntent.getStringExtra(NewBellyMeasurementActivity.EXTRA_INTENT_KEY_DATE),
+                    newBellyIntent.getFloatExtra(NewBellyMeasurementActivity.EXTRA_INTENT_KEY_RADIUS,
+                            0));
+            if (newBellyIntent.getStringExtra(EXTRA_INTENT_KEY_ACTION).equals("update")){
+                bellyViewModel.updateBelly(belly);
+            }
+        }
     }
 
+    // verwerken vn replyIntent vn NewBelly vr insert
     public void onActivityResult(int requestcode, int resultcode, Intent bellyIntent) {
 
         super.onActivityResult(requestcode, resultcode, bellyIntent);
@@ -106,10 +122,5 @@ public class BellyActivity extends AppCompatActivity {
             Toast.makeText(getApplicationContext(),
                     "empty reply from New Belly activity", Toast.LENGTH_LONG).show();
         }
-    }
-
-    // deze methode doet niets dus je kan voorlopig niet deleten obv de d toets !!
-    public void deleteBellyM(RecyclerView.ViewHolder view) {
-        int position = view.getLayoutPosition();
     }
 }

@@ -40,13 +40,16 @@ public class Belly {
         }
     }
 
-    public String getDate() {
+    public String getFormatDate() {
         String day = date.substring(0,2);
         String month = date.substring(2,4);
         String year = date.substring(4);
         return day + "/" + month + "/" + year;
     }
 
+    public String getDate(){
+        return this.date;
+    }
     public float getBellyRadius() {
         return bellyRadius;
     }

@@ -31,4 +31,8 @@ public class BellyViewModel extends AndroidViewModel {
     public void deleteBelly(Belly belly){
         repository.deleteBelly(belly);
     }
+
+    public void updateBelly(Belly belly){
+        repository.updateBelly(belly);
+    }
 }

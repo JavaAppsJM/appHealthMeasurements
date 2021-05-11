@@ -27,4 +27,7 @@
     <string name="BellyMeasurementsListLabelRadius">Radius</string>
     <string name="update_letter">u</string>
     <string name="delete_letter">d</string>
+    <string name="update_belly_measurement_text">Update Belly Measurement</string>
+    <string name="title_update_belly">Update Belly Measurement</string>
+    <string name="title_new_belly">New Belly Measurement</string>
 </resources>

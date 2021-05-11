@@ -1,7 +1,6 @@
 package be.hvwebsites.healthmeasurements.repositories;
 
 import android.app.Application;
-import android.os.AsyncTask;
 
 import androidx.lifecycle.LiveData;
 
@@ -29,17 +28,7 @@ public class BellyRepository{
     }
 
     public void insertBelly(Belly belly){
-//        bellyDAO.insertBellyMeasurement(belly);
-//        new insertBellyAsync(bellyDAO).doInBackground(belly);
         executor.submit(new insertBellyAsyncTask(bellyDAO, belly));
-    }
-
-    public void deleteBelly(Belly belly){
-        executor.submit(new deleteBellyAsyncTask(bellyDAO, belly));
-    }
-
-    public void updateBelly(Belly newBelly){
-        bellyDAO.updateBellyMeasurement(newBelly.getDate(), newBelly.getBellyRadius());
     }
 
     public class insertBellyAsyncTask implements Runnable{
@@ -57,6 +46,10 @@ public class BellyRepository{
         }
     }
 
+    public void deleteBelly(Belly belly){
+        executor.submit(new deleteBellyAsyncTask(bellyDAO, belly));
+    }
+
     public class deleteBellyAsyncTask implements Runnable{
         private BellyDAO mAsyncBellyDao;
         private Belly belly;
@@ -72,23 +65,24 @@ public class BellyRepository{
         }
     }
 
-    /*
-private static class insertBellyAsync extends AsyncTask<Belly, Void, Void>{
+    public void updateBelly(Belly newBelly){
+        executor.submit(new updateBellyAsyncTask(bellyDAO, newBelly));
+    }
+
+    public class updateBellyAsyncTask implements Runnable{
         private BellyDAO mAsyncBellyDao;
+        private Belly newBelly;
 
-        insertBellyAsync(BellyDAO dao){
+        updateBellyAsyncTask(BellyDAO dao, Belly newBelly){
             mAsyncBellyDao = dao;
-        }
-
-        void doInBackground(Belly belly){
-            mAsyncBellyDao.insertBellyMeasurement(belly);
+            this.newBelly = newBelly;
         }
 
         @Override
-        protected Void doInBackground(Belly... bellies) {
-            mAsyncBellyDao.insertBellyMeasurement(bellies[0]);
-            return null;
+        public void run() {
+            mAsyncBellyDao.updateBellyMeasurement(
+                            newBelly.getDateInt(),
+                            newBelly.getBellyRadius());
         }
     }
-*/
 }
