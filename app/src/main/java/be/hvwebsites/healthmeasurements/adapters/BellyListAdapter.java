@@ -55,9 +55,6 @@ public class BellyListAdapter extends RecyclerView.Adapter<BellyListAdapter.Bell
             intent.putExtra(EXTRA_INTENT_KEY_ACTION, "update");
             intent.putExtra(EXTRA_INTENT_KEY_DATE, current.getFormatDate());
             intent.putExtra(EXTRA_INTENT_KEY_RADIUS, current.getBellyRadius());
-            // TODO:Waarom werkt dit niet ???
-            //startActivityForResult(intent,INTENT_REQUEST_CODE);
-            // dan nemen we maar gewone startActivity
             mContext.startActivity(intent);
         }
     }
@@ -76,7 +73,9 @@ public class BellyListAdapter extends RecyclerView.Adapter<BellyListAdapter.Bell
             String bellyTextLine = current.getFormatDate()
                     + " : "
                     + current.getBellyRadius()
-                    + "cm";
+                    + "cm "
+                    + " -- "
+                    + current.getDateInt();
             holder.bellyItemView.setText(bellyTextLine);
         } else {
             holder.bellyItemView.setText("No bellys");

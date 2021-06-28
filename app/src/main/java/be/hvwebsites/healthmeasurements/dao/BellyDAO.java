@@ -26,4 +26,10 @@ public interface BellyDAO {
 
     @Query("SELECT * from belly_radius ORDER BY dateint DESC")
     LiveData<List<Belly>> getAllBellys();
+
+    @Query("SELECT * FROM belly_radius WHERE dateint = :maxDateInt")
+    Belly getLatestBelly(int maxDateInt);
+
+    @Query("SELECT MAX(dateint) FROM belly_radius")
+    int getMaxDateint();
 }

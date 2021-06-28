@@ -32,6 +32,9 @@ public class Belly {
         this.dateInt = Integer.parseInt(year + month + day);
     }
 
+    public Belly() {
+    }
+
     public String leadingZero(String string){
         if (Integer.parseInt(string) < 10 && string.length() < 2){
             return  "0" + string;

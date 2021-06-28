@@ -15,17 +15,52 @@ import be.hvwebsites.healthmeasurements.entities.Belly;
 public class BellyRepository{
     private BellyDAO bellyDAO;
     private LiveData<List<Belly>> bellyList;
+    private Belly latestBelly;
+    private int maxDateInt;
     private ExecutorService executor = Executors.newFixedThreadPool(5);
 
     public BellyRepository(Application application){
         BellyDB db = BellyDB.getDatabase(application);
         bellyDAO = db.bellyDAO();
         bellyList = bellyDAO.getAllBellys();
+
+        maxDateInt = bellyDAO.getMaxDateint();
+        latestBelly = bellyDAO.getLatestBelly(maxDateInt);
     }
 
     public LiveData<List<Belly>> getBellyList() {
         return bellyList;
     }
+
+    public Belly getLatestBelly(){
+        return latestBelly;
+/*
+        getBellyAsyncTask bellyAsyncTask = new getBellyAsyncTask(bellyDAO);
+        executor.submit(bellyAsyncTask);
+        return bellyAsyncTask.getBelly();
+*/
+    }
+
+/*
+    public class getBellyAsyncTask implements Runnable{
+        private BellyDAO mAsyncBellyDao;
+        private Belly belly;
+
+        getBellyAsyncTask(BellyDAO dao){
+            mAsyncBellyDao = dao;
+        }
+
+        @Override
+        public void run() {
+            int maxDateint = mAsyncBellyDao.getMaxDateint();
+            belly = mAsyncBellyDao.getLatestBelly(maxDateint);
+        }
+
+        public Belly getBelly() {
+            return belly;
+        }
+    }
+*/
 
     public void insertBelly(Belly belly){
         executor.submit(new insertBellyAsyncTask(bellyDAO, belly));

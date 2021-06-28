@@ -2,8 +2,8 @@ package be.hvwebsites.healthmeasurements;
 
 import android.content.Intent;
 import android.os.Bundle;
-
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import android.view.View;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -15,17 +15,18 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.view.View;
-import android.widget.Toast;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.List;
 
 import be.hvwebsites.healthmeasurements.adapters.BellyListAdapter;
 import be.hvwebsites.healthmeasurements.entities.Belly;
+import be.hvwebsites.healthmeasurements.files.BellyFile;
 import be.hvwebsites.healthmeasurements.viewmodels.BellyViewModel;
+import be.hvwebsites.healthmeasurements.viewmodels.BellyViewModelF;
 
-public class BellyActivity extends AppCompatActivity {
-    private BellyViewModel bellyViewModel;
+public class BellyActivityF extends AppCompatActivity {
+    private BellyViewModelF bellyViewModel;
     public static final int INTENT_REQUEST_CODE = 1;
     public static final String EXTRA_INTENT_KEY_ACTION =
             "be.hvwebsites.healthmeasurements.INTENT_KEY_ACTION";
@@ -41,7 +42,7 @@ public class BellyActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(BellyActivity.this,
+                Intent intent = new Intent(BellyActivityF.this,
                         NewBellyMeasurementActivity.class);
                 // als je antwoord terug verwacht, het antwoord wordt verwerkt in onActivityResult
                 startActivityForResult(intent,INTENT_REQUEST_CODE);
@@ -53,17 +54,24 @@ public class BellyActivity extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
+        // Belly File lezen
+        String baseDir = getBaseContext().getExternalFilesDir(null).getAbsolutePath();
+        BellyFile bellyFile = new BellyFile(baseDir);
+
+        //TODO: hoe kun je een list met gegevens in een recyclerview krijgen ?
+
         // Get a viewmodel from the viewmodelproviders
-        bellyViewModel = ViewModelProviders.of(this).get(BellyViewModel.class);
+        bellyViewModel = ViewModelProviders.of(this).get(BellyViewModelF.class);
 
         // Add an observer to observe changes
         bellyViewModel.getBellyList().observe(this, new Observer<List<Belly>>() {
             @Override
             public void onChanged(@Nullable final List<Belly> bellies) {
-                // Update the cached copy of the data in the adapter.
+                // Update the cached copy of the words in the adapter.
                 adapter.setBellyList(bellies);
             }
         });
+
 
         // om te kunnen swipen in de recyclerview
         ItemTouchHelper helper = new ItemTouchHelper(
@@ -81,11 +89,11 @@ public class BellyActivity extends AppCompatActivity {
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
                 int position = viewHolder.getAdapterPosition();
                 Belly sBelly = adapter.getBellyAtPosition(position);
-                Toast.makeText(BellyActivity.this,
+                Toast.makeText(BellyActivityF.this,
                         "Deleting belly measurement on " + sBelly.getFormatDate(),
                         Toast.LENGTH_LONG).show();
                 // Delete Belly measurement
-                bellyViewModel.deleteBelly(sBelly);
+                // bellyViewModel.deleteBelly(sBelly);
             }
         });
         helper.attachToRecyclerView(recyclerView);
