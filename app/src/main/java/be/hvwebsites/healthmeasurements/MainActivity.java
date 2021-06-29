@@ -32,6 +32,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         latestMeasurementsView = findViewById(R.id.resumeinfo);
 
+
         // Test a file
 //        String baseDir = Environment.getDataDirectory().getAbsolutePath();
         String baseDir = getBaseContext().getExternalFilesDir(null).getAbsolutePath();
