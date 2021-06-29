@@ -77,8 +77,7 @@ public class MainActivity extends AppCompatActivity {
 
     // Als op knop Belly wordt gedrukt
     public void startBellyAct(View view) {
-//        Intent intent = new Intent(this, BellyActivity.class);
-        Intent intent = new Intent(this, BellyActivityF.class);
+        Intent intent = new Intent(this, BellyActivity.class);
         startActivity(intent);
     }
 }
