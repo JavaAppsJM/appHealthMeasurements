@@ -34,33 +34,42 @@ public class BellyRepository{
 //        bellyList = (LiveData<List<Belly>>) tmpBellyList;
     }
 
-    public void initializeRepository(File bellyFile){
-        String[] fileLines = new String[1000];
+    public boolean initializeRepository(File bellyFile){
+        if (fileNrBellyList(bellyFile)){
+            // Bellyfile lezen is gelukt en bellies zitten in bellyList
+            // Bepaal latestbelly
+            latestBelly = readBelly;
+            for (int j = 0; j < tmpBellyList.size() ; j++) {
+                if (latestBelly.getDateInt() < tmpBellyList.get(j).getDateInt()){
+                    latestBelly = tmpBellyList.get(j);
+                }
+            }
+            return true;
+        }else {
+            return false;
+        }
+    }
+
+    public boolean fileNrBellyList(File bellyFile){
+        // Belly File lezen
         if (bellyFile.exists()){
             try {
                 Scanner inFile = new Scanner(bellyFile);
                 int i = 0;
                 while (inFile.hasNext()){
-                    fileLines[i] = inFile.nextLine();
-                    readBelly = getBellyFromFileLine(fileLines[i]);
+                    readBelly = getBellyFromFileLine(inFile.nextLine());
                     tmpBellyList.add(readBelly);
                     i++;
                 }
                 inFile.close();
-                //bellyList = (LiveData<List<Belly>>) tmpBellyList;
-
-                // Bepaal latestbelly
-                latestBelly = readBelly;
-                for (int j = 0; j < tmpBellyList.size() ; j++) {
-                    if (latestBelly.getDateInt() < tmpBellyList.get(j).getDateInt()){
-                        latestBelly = tmpBellyList.get(j);
-                    }
-                }
+                return true;
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
+                return false;
             }
+        }else {
+            return false;
         }
-
     }
 
     public List<Belly> getTBellyList() {
@@ -90,27 +99,38 @@ public class BellyRepository{
         return latestBelly;
     }
 
-    public void insertBelly(Belly belly) throws FileNotFoundException {
+    public boolean insertBelly(Belly belly, File bellyFile){
         // Toevoegen aan bellylist
         tmpBellyList.add(belly);
-        bellyList = (LiveData<List<Belly>>) tmpBellyList;
+//        bellyList = (LiveData<List<Belly>>) tmpBellyList;
 
         // Wegschrijven nr file
-        String baseDir = Environment.getDataDirectory().getAbsolutePath();
-//        String baseDir = getBaseContext().getExternalFilesDir(null).getAbsolutePath();
-        File testFile = new File(baseDir,"test.txt");
-        if (testFile.exists()){
+        if (bellyListNrFile(bellyFile)){
+            // Wegschrijven gelukt
+            return true;
+        }else {
+            // Wegschrijven mislukt
+            return false;
+        }
+    }
+
+    public boolean bellyListNrFile(File bellyFile){
+        // Wegschrijven nr file
+        if (bellyFile.exists()){
             try {
-                PrintWriter outFile = new PrintWriter(testFile);
+                PrintWriter outFile = new PrintWriter(bellyFile);
                 for (int i = 0; i < tmpBellyList.size(); i++) {
                     outFile.println(makeFileLine(tmpBellyList.get(i)));
                 }
                 outFile.close();
+                return true;
             } catch (FileNotFoundException e){
                 e.printStackTrace();
+                return false;
             }
+        } else {
+            return false;
         }
-
     }
 
     public String makeFileLine(Belly belly){
@@ -119,8 +139,22 @@ public class BellyRepository{
         return fileLine;
     }
 
-    public void deleteBelly(Belly belly){
-//        executor.submit(new deleteBellyAsyncTask(bellyDAO, belly));
+    public boolean deleteBelly(Belly belly, File bellyFile){
+        // Zoek belly in bellylist
+        if (tmpBellyList.remove(belly)){
+            // belly is uit de belly list
+            // Wegschrijven nr file
+            if (bellyListNrFile(bellyFile)){
+                // Wegschrijven gelukt
+                return true;
+            }else {
+                // Wegschrijven mislukt
+                return false;
+            }
+        }else {
+            // belly niet in bellylist
+            return true;
+        }
     }
 
     public void updateBelly(Belly newBelly){

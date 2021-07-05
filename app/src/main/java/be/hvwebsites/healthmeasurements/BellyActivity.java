@@ -28,9 +28,11 @@ import be.hvwebsites.healthmeasurements.viewmodels.BellyViewModel;
 
 public class BellyActivity extends AppCompatActivity {
     private BellyViewModel bellyViewModel;
+    private String baseDirectory;
     public static final int INTENT_REQUEST_CODE = 1;
     public static final String EXTRA_INTENT_KEY_ACTION =
             "be.hvwebsites.healthmeasurements.INTENT_KEY_ACTION";
+    public static final String BELLY_FILE = "test.txt";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,19 +57,26 @@ public class BellyActivity extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        // Belly File lezen
-        String baseDir = getBaseContext().getExternalFilesDir(null).getAbsolutePath();
-        File testFile = new File(baseDir,"test.txt");
+        // Belly File declareren
+        baseDirectory = getBaseContext().getExternalFilesDir(null).getAbsolutePath();
+        File bellyFile = new File(baseDirectory, BELLY_FILE);
+//        String baseDir = getBaseContext().getExternalFilesDir(null).getAbsolutePath();
 //        BellyFile bellyFile = new BellyFile(baseDir);
 
         // Get a viewmodel from the viewmodelproviders
         bellyViewModel = ViewModelProviders.of(this).get(BellyViewModel.class);
 
         // Initialize viewmodel
-        bellyViewModel.initializeBellyViewModel(testFile);
+        if (bellyViewModel.initializeBellyViewModel(bellyFile)){
+            // BellyFile lezen is gelukt
+            // Get tBellyList
+            adapter.setBellyList(bellyViewModel.gettBellyList());
+        }else {
+            Toast.makeText(BellyActivity.this,
+                    "Loading Belly Measurements failed",
+                    Toast.LENGTH_LONG).show();
+        }
 
-        // Get tBellyList
-        adapter.setBellyList(bellyViewModel.gettBellyList());
 
         // Add an observer to observe changes
 /*
@@ -100,7 +109,7 @@ public class BellyActivity extends AppCompatActivity {
                         "Deleting belly measurement on " + sBelly.getFormatDate(),
                         Toast.LENGTH_LONG).show();
                 // Delete Belly measurement
-                //bellyViewModel.deleteBelly(sBelly);
+                bellyViewModel.deleteBelly(sBelly, bellyFile);
             }
         });
         helper.attachToRecyclerView(recyclerView);
@@ -120,6 +129,8 @@ public class BellyActivity extends AppCompatActivity {
 
     // verwerken vn replyIntent vn NewBelly vr insert
     public void onActivityResult(int requestcode, int resultcode, Intent bellyIntent) {
+        // File opnieuw lezen
+        File bellyFile = new File(baseDirectory, BELLY_FILE);
 
         super.onActivityResult(requestcode, resultcode, bellyIntent);
 
@@ -128,7 +139,10 @@ public class BellyActivity extends AppCompatActivity {
                     bellyIntent.getStringExtra(NewBellyMeasurementActivity.EXTRA_INTENT_KEY_DATE),
                     bellyIntent.getFloatExtra(NewBellyMeasurementActivity.EXTRA_INTENT_KEY_RADIUS,
                             0));
-            bellyViewModel.insertBelly(belly);
+            if (!bellyViewModel.insertBelly(belly, bellyFile)){
+                Toast.makeText(getApplicationContext(),
+                        "inserting new belly failed !", Toast.LENGTH_LONG).show();
+            }
         } else {
             Toast.makeText(getApplicationContext(),
                     "empty reply from New Belly activity", Toast.LENGTH_LONG).show();

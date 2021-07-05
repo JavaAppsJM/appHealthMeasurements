@@ -25,11 +25,14 @@ public class BellyViewModel extends AndroidViewModel {
         repository = new BellyRepository(application);
     }
 
-    public void initializeBellyViewModel(File bellyFile){
-        repository.initializeRepository(bellyFile);
-        bellyList = repository.getBellyList();
-        tBellyList = repository.getTBellyList();
-        latestBelly = repository.getLatestBelly();
+    public boolean initializeBellyViewModel(File bellyFile){
+        if (repository.initializeRepository(bellyFile)){
+            tBellyList = repository.getTBellyList();
+            latestBelly = repository.getLatestBelly();
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public void setBellyFile(File bellyFile) {
@@ -44,16 +47,16 @@ public class BellyViewModel extends AndroidViewModel {
         return bellyList;
     }
 
-    public void insertBelly(Belly belly){
-        try {
-            repository.insertBelly(belly);
-        }catch (FileNotFoundException e){
-            e.printStackTrace();
+    public boolean insertBelly(Belly belly, File bellyFile){
+        if (repository.insertBelly(belly, bellyFile)){
+            return true;
+        }else {
+            return false;
         }
     }
 
-    public void deleteBelly(Belly belly){
-        repository.deleteBelly(belly);
+    public void deleteBelly(Belly belly, File bellyFile){
+        repository.deleteBelly(belly, bellyFile);
     }
 
     public void updateBelly(Belly belly){
