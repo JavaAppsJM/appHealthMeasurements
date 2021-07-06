@@ -30,4 +30,6 @@
     <string name="update_belly_measurement_text">Update Belly Measurement</string>
     <string name="title_update_belly">Update Belly Measurement</string>
     <string name="title_new_belly">New Belly Measurement</string>
+    <string name="cancel_update">Cancel Update</string>
+    <string name="cancel_add">Cancel Add</string>
 </resources>

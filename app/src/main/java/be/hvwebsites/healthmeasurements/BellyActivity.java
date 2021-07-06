@@ -145,7 +145,7 @@ public class BellyActivity extends AppCompatActivity {
             }
         } else {
             Toast.makeText(getApplicationContext(),
-                    "empty reply from New Belly activity", Toast.LENGTH_LONG).show();
+                    "empty reply from New Belly activity or cancel", Toast.LENGTH_LONG).show();
         }
     }
 }

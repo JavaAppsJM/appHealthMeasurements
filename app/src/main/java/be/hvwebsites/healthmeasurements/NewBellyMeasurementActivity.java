@@ -73,6 +73,18 @@ public class NewBellyMeasurementActivity extends AppCompatActivity {
                 finish();
             }
         });
+        final Button cancelAddButton = findViewById(R.id.cancel_add);
+        cancelAddButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // replyintent vr startActivityForResult
+                Intent replyIntent = new Intent();
+                Toast.makeText(NewBellyMeasurementActivity.this,
+                        "Add New Belly Measurement cancelled by user !", Toast.LENGTH_LONG).show();
+                setResult(RESULT_CANCELED, replyIntent);
+                finish();
+            }
+        });
     }
 
     public void showDatePicker(View view) {

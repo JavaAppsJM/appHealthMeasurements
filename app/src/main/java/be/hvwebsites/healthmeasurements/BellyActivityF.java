@@ -106,7 +106,7 @@ public class BellyActivityF extends AppCompatActivity {
                     newBellyIntent.getFloatExtra(NewBellyMeasurementActivity.EXTRA_INTENT_KEY_RADIUS,
                             0));
             if (newBellyIntent.getStringExtra(EXTRA_INTENT_KEY_ACTION).equals("update")){
-                bellyViewModel.updateBelly(belly);
+                //bellyViewModel.updateBelly(belly);
             }
         }
     }
@@ -121,7 +121,7 @@ public class BellyActivityF extends AppCompatActivity {
                     bellyIntent.getStringExtra(NewBellyMeasurementActivity.EXTRA_INTENT_KEY_DATE),
                     bellyIntent.getFloatExtra(NewBellyMeasurementActivity.EXTRA_INTENT_KEY_RADIUS,
                             0));
-            bellyViewModel.insertBelly(belly);
+            //bellyViewModel.insertBelly(belly);
         } else {
             Toast.makeText(getApplicationContext(),
                     "empty reply from New Belly activity", Toast.LENGTH_LONG).show();

@@ -84,7 +84,7 @@ public class BellyActivityDB extends AppCompatActivity {
                         "Deleting belly measurement on " + sBelly.getFormatDate(),
                         Toast.LENGTH_LONG).show();
                 // Delete Belly measurement
-                bellyViewModel.deleteBelly(sBelly);
+                //bellyViewModel.deleteBelly(sBelly, b);
             }
         });
         helper.attachToRecyclerView(recyclerView);
@@ -112,7 +112,7 @@ public class BellyActivityDB extends AppCompatActivity {
                     bellyIntent.getStringExtra(NewBellyMeasurementActivity.EXTRA_INTENT_KEY_DATE),
                     bellyIntent.getFloatExtra(NewBellyMeasurementActivity.EXTRA_INTENT_KEY_RADIUS,
                             0));
-            bellyViewModel.insertBelly(belly);
+            //bellyViewModel.insertBelly(belly);
         } else {
             Toast.makeText(getApplicationContext(),
                     "empty reply from New Belly activity", Toast.LENGTH_LONG).show();

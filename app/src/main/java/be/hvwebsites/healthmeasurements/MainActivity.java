@@ -104,7 +104,7 @@ public class MainActivity extends AppCompatActivity {
             //bellyViewModel.insertBelly(belly);
         } else {
             Toast.makeText(getApplicationContext(),
-                    "empty reply from New Belly activity", Toast.LENGTH_LONG).show();
+                    "empty reply from New Belly activity or cancel", Toast.LENGTH_LONG).show();
         }
     }
 
