@@ -157,8 +157,19 @@ public class BellyRepository{
         }
     }
 
-    public void updateBelly(Belly newBelly){
-//        executor.submit(new updateBellyAsyncTask(bellyDAO, newBelly));
+    public boolean updateBelly(Float oldRadius, Belly newBelly, File bellyFile){
+        // Maak oldBelly van oldRadius en newBelly
+        Belly oldBelly = new Belly(newBelly.getDate(), oldRadius);
+        // Vervang oldBelly met newBelly in bellyList
+        tmpBellyList.set(tmpBellyList.indexOf(oldBelly), newBelly);
+        // Wegschrijven nr file
+        if (bellyListNrFile(bellyFile)){
+            // Wegschrijven gelukt
+            return true;
+        }else {
+            // Wegschrijven mislukt
+            return false;
+        }
     }
 
 }

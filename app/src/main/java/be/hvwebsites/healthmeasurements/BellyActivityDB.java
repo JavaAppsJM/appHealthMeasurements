@@ -97,7 +97,7 @@ public class BellyActivityDB extends AppCompatActivity {
                     newBellyIntent.getFloatExtra(NewBellyMeasurementActivity.EXTRA_INTENT_KEY_RADIUS,
                             0));
             if (newBellyIntent.getStringExtra(EXTRA_INTENT_KEY_ACTION).equals("update")){
-                bellyViewModel.updateBelly(belly);
+                //bellyViewModel.updateBelly(belly);
             }
         }
     }

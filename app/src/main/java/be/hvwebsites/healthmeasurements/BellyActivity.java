@@ -77,18 +77,6 @@ public class BellyActivity extends AppCompatActivity {
                     Toast.LENGTH_LONG).show();
         }
 
-
-        // Add an observer to observe changes
-/*
-        bellyViewModel.getBellyList().observe(this, new Observer<List<Belly>>() {
-            @Override
-            public void onChanged(@Nullable final List<Belly> bellies) {
-                // Update the cached copy of the data in the adapter.
-                adapter.setBellyList(bellies);
-            }
-        });
-*/
-
         // om te kunnen swipen in de recyclerview
         ItemTouchHelper helper = new ItemTouchHelper(
                 new ItemTouchHelper.SimpleCallback(0,
@@ -118,11 +106,14 @@ public class BellyActivity extends AppCompatActivity {
         Intent newBellyIntent = getIntent();
         if (newBellyIntent.hasExtra(EXTRA_INTENT_KEY_ACTION)){
             Belly belly = new Belly(
-                    newBellyIntent.getStringExtra(NewBellyMeasurementActivity.EXTRA_INTENT_KEY_DATE),
-                    newBellyIntent.getFloatExtra(NewBellyMeasurementActivity.EXTRA_INTENT_KEY_RADIUS,
+                    newBellyIntent.getStringExtra(UpdateBellyMActivity.EXTRA_INTENT_KEY_DATE),
+                    newBellyIntent.getFloatExtra(UpdateBellyMActivity.EXTRA_INTENT_KEY_RADIUS,
                             0));
             if (newBellyIntent.getStringExtra(EXTRA_INTENT_KEY_ACTION).equals("update")){
-                bellyViewModel.updateBelly(belly);
+                bellyViewModel.updateBelly(
+                        newBellyIntent.getFloatExtra(UpdateBellyMActivity.EXTRA_INTENT_KEY_RADIUS_OLD, 0),
+                        belly,
+                        bellyFile);
             }
         }
     }

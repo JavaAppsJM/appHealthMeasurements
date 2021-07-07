@@ -16,12 +16,15 @@ import be.hvwebsites.healthmeasurements.entities.Belly;
 public class UpdateBellyMActivity extends AppCompatActivity {
     private TextView dateView;
     private EditText radiusView;
+    private Belly oldBelly;
     public static final String EXTRA_INTENT_KEY_ACTION =
             "be.hvwebsites.healthmeasurements.INTENT_KEY_ACTION";
     public static final String EXTRA_INTENT_KEY_DATE =
             "be.hvwebsites.healthmeasurements.INTENT_KEY_DATE";
     public static final String EXTRA_INTENT_KEY_RADIUS =
             "be.hvwebsites.healthmeasurements.INTENT_KEY_RADIUS";
+    public static final String EXTRA_INTENT_KEY_RADIUS_OLD =
+            "be.hvwebsites.healthmeasurements.INTENT_KEY_RADIUS_OLD";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,7 +38,7 @@ public class UpdateBellyMActivity extends AppCompatActivity {
         // Data uit intent halen
         Intent bellyIntent = getIntent();
         if (bellyIntent.hasExtra(EXTRA_INTENT_KEY_DATE)){
-            Belly oldBelly = new Belly(
+            oldBelly = new Belly(
                     bellyIntent.getStringExtra(EXTRA_INTENT_KEY_DATE),
                     bellyIntent.getFloatExtra(EXTRA_INTENT_KEY_RADIUS, 0));
             dateView.setText(oldBelly.getFormatDate());
@@ -66,6 +69,8 @@ public class UpdateBellyMActivity extends AppCompatActivity {
                     replyIntent.putExtra(EXTRA_INTENT_KEY_DATE, dateString);
                     replyIntent.putExtra(EXTRA_INTENT_KEY_RADIUS,
                             Float.parseFloat(String.valueOf(radiusView.getText())));
+                    replyIntent.putExtra(EXTRA_INTENT_KEY_RADIUS_OLD,
+                            oldBelly.getBellyRadius());
                     replyIntent.putExtra(EXTRA_INTENT_KEY_ACTION, "update");
                     startActivity(replyIntent);
                 }

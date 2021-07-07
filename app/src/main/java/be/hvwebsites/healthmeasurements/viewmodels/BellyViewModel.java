@@ -59,8 +59,8 @@ public class BellyViewModel extends AndroidViewModel {
         repository.deleteBelly(belly, bellyFile);
     }
 
-    public void updateBelly(Belly belly){
-        repository.updateBelly(belly);
+    public void updateBelly(Float oldRadius, Belly belly, File bellyFile){
+        repository.updateBelly(oldRadius, belly,bellyFile);
     }
 
     public Belly getLatestBelly(){
