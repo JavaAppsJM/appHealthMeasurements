@@ -28,6 +28,7 @@ public class MainActivity extends AppCompatActivity {
     private TextView latestMeasurementsView;
     private boolean bellies = false;
     public static final int INTENT_REQUEST_CODE = 1;
+    public static final String BELLY_FILE = "test.txt";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,10 +37,9 @@ public class MainActivity extends AppCompatActivity {
         latestMeasurementsView = findViewById(R.id.resumeinfo);
 
 
-        // Test a file
-//        String baseDir = Environment.getDataDirectory().getAbsolutePath();
+        // Ophalen belly measurements
         String baseDir = getBaseContext().getExternalFilesDir(null).getAbsolutePath();
-        File bellyFile = new File(baseDir,"test.txt");
+        File bellyFile = new File(baseDir, BELLY_FILE);
         String[] fileLines = new String[1000];
         if (bellyFile.exists()){
             try {
@@ -77,35 +77,8 @@ public class MainActivity extends AppCompatActivity {
 
     // Als op knop Belly wordt gedrukt
     public void startBellyAct(View view) {
-        if (bellies){
-            // Als er bellies zijn, toon bellies in BellyActivity
+            // Ongeacht of er bellies zijn, ga naar BellyActivity. Indien er bellies zijn worden ze getoond anders wordt er naar NewBellyActivity gegaan
             Intent intent = new Intent(this, BellyActivity.class);
             startActivity(intent);
-        }else {
-            // Als er geen bellies zijn, ga naar NewBellyMeasurement
-            Intent intent = new Intent(this,
-                    NewBellyMeasurementActivity.class);
-            // als je antwoord terug verwacht, het antwoord wordt verwerkt in onActivityResult
-            startActivityForResult(intent,INTENT_REQUEST_CODE);
-
-        }
     }
-
-    // verwerken vn replyIntent vn NewBelly vr insert
-    public void onActivityResult(int requestcode, int resultcode, Intent bellyIntent) {
-
-        super.onActivityResult(requestcode, resultcode, bellyIntent);
-
-        if (requestcode == INTENT_REQUEST_CODE && resultcode == RESULT_OK){
-            Belly belly = new Belly(
-                    bellyIntent.getStringExtra(NewBellyMeasurementActivity.EXTRA_INTENT_KEY_DATE),
-                    bellyIntent.getFloatExtra(NewBellyMeasurementActivity.EXTRA_INTENT_KEY_RADIUS,
-                            0));
-            //bellyViewModel.insertBelly(belly);
-        } else {
-            Toast.makeText(getApplicationContext(),
-                    "empty reply from New Belly activity or cancel", Toast.LENGTH_LONG).show();
-        }
-    }
-
 }

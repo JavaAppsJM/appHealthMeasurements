@@ -67,6 +67,7 @@ public class Belly {
 
     public void setDate(@NonNull String date) {
         this.date = date;
+        this.dateInt = Integer.parseInt(date.substring(4) + date.substring(2,4) + date.substring(0,2));
     }
 
     public void setBellyRadius(float bellyRadius) {

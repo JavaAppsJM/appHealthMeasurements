@@ -12,6 +12,7 @@ import java.util.List;
 
 import be.hvwebsites.healthmeasurements.entities.Belly;
 import be.hvwebsites.healthmeasurements.repositories.BellyRepository;
+import be.hvwebsites.healthmeasurements.returnInfo.ReturnInfo;
 
 public class BellyViewModel extends AndroidViewModel {
     private BellyRepository repository;
@@ -22,15 +23,24 @@ public class BellyViewModel extends AndroidViewModel {
 
     public BellyViewModel(Application application){
         super(application);
-        repository = new BellyRepository(application);
+        repository = new BellyRepository();
     }
 
-    public boolean initializeBellyViewModel(File bellyFile){
-        if (repository.initializeRepository(bellyFile)){
+    public ReturnInfo initializeBellyViewModel(File bellyFile){
+        ReturnInfo bellyToestand = repository.initializeRepository(bellyFile);
+        if (bellyToestand.getReturnCode() == 0){
             tBellyList = repository.getTBellyList();
             latestBelly = repository.getLatestBelly();
+        } else if (bellyToestand.getReturnCode() == 100){
+        }else {
+        }
+        return bellyToestand;
+    }
+
+    public boolean storeBellies(File bellyFile, List<Belly> bellyList){
+        if (repository.storeBellies(bellyFile, bellyList)){
             return true;
-        } else {
+        }else {
             return false;
         }
     }

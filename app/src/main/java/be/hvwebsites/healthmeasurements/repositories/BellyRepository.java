@@ -18,6 +18,7 @@ import be.hvwebsites.healthmeasurements.dao.BellyDAO;
 import be.hvwebsites.healthmeasurements.database.BellyDB;
 import be.hvwebsites.healthmeasurements.entities.Belly;
 import be.hvwebsites.healthmeasurements.files.BellyFile;
+import be.hvwebsites.healthmeasurements.returnInfo.ReturnInfo;
 
 public class BellyRepository{
     private LiveData<List<Belly>> bellyList;
@@ -26,16 +27,13 @@ public class BellyRepository{
     private List<Belly> tmpBellyList;
     private int maxDateInt;
 
-    public BellyRepository(Application application){
-//        String baseDir = Environment.getDataDirectory().getAbsolutePath();
-//        String baseDir = getBaseContext().getExternalFilesDir(null).getAbsolutePath();
-//        File testFile = new File(baseDir,"test.txt");
+    public BellyRepository(){
         tmpBellyList = new ArrayList<>();
-//        bellyList = (LiveData<List<Belly>>) tmpBellyList;
     }
 
-    public boolean initializeRepository(File bellyFile){
-        if (fileNrBellyList(bellyFile)){
+    public ReturnInfo initializeRepository(File bellyFile){
+        ReturnInfo bellyToestand = fileNrBellyList(bellyFile);
+        if (bellyToestand.getReturnCode() == 0){
             // Bellyfile lezen is gelukt en bellies zitten in bellyList
             // Bepaal latestbelly
             latestBelly = readBelly;
@@ -44,13 +42,16 @@ public class BellyRepository{
                     latestBelly = tmpBellyList.get(j);
                 }
             }
-            return true;
+        }else if (bellyToestand.getReturnCode() == 100){
+            // Geen bellies
         }else {
-            return false;
+            // Fout bij lezen file
         }
+        return bellyToestand;
     }
 
-    public boolean fileNrBellyList(File bellyFile){
+    public ReturnInfo fileNrBellyList(File bellyFile){
+        ReturnInfo returnInfo = new ReturnInfo(0);
         // Belly File lezen
         if (bellyFile.exists()){
             try {
@@ -62,13 +63,19 @@ public class BellyRepository{
                     i++;
                 }
                 inFile.close();
-                return true;
+                return returnInfo;
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
-                return false;
+                // Returninfo invullen
+                returnInfo.setReturnCode(101);
+                returnInfo.setReturnMessage("File niet gevonden !");
+                return returnInfo;
             }
         }else {
-            return false;
+            // Returninfo invullen
+            returnInfo.setReturnCode(100);
+            returnInfo.setReturnMessage("Er zijn nog geen bellies !");
+            return returnInfo;
         }
     }
 
@@ -114,6 +121,21 @@ public class BellyRepository{
         }
     }
 
+    public boolean storeBellies(File bellyFile, List<Belly> bellyList){
+        // Wegschrijven nr file
+        try {
+            PrintWriter outFile = new PrintWriter(bellyFile);
+            for (int i = 0; i < bellyList.size(); i++) {
+                outFile.println(makeFileLine(bellyList.get(i)));
+            }
+            outFile.close();
+            return true;
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
     public boolean bellyListNrFile(File bellyFile){
         // Wegschrijven nr file
         if (bellyFile.exists()){
@@ -134,7 +156,7 @@ public class BellyRepository{
     }
 
     public String makeFileLine(Belly belly){
-        String fileLine = "<date><" + belly.getDateInt()
+        String fileLine = "<date><" + belly.getDate()
                 + "><bellyRadius><" + String.valueOf(belly.getBellyRadius()) + ">";
         return fileLine;
     }
