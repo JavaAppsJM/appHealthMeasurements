@@ -6,10 +6,8 @@ import android.os.Bundle;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -24,7 +22,6 @@ import java.util.List;
 
 import be.hvwebsites.healthmeasurements.adapters.BellyListAdapter;
 import be.hvwebsites.healthmeasurements.entities.Belly;
-import be.hvwebsites.healthmeasurements.files.BellyFile;
 import be.hvwebsites.healthmeasurements.returnInfo.ReturnInfo;
 import be.hvwebsites.healthmeasurements.viewmodels.BellyViewModel;
 
@@ -41,8 +38,8 @@ public class BellyActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_belly);
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        //Toolbar toolbar = findViewById(R.id.toolbarr);
+        //setSupportActionBar(toolbar);
 
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -50,8 +47,9 @@ public class BellyActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(BellyActivity.this,
                         NewBellyMeasurementActivity.class);
-                // als je antwoord terug verwacht, het antwoord wordt verwerkt in onActivityResult
-                startActivityForResult(intent, INTENT_REQUEST_CODE);
+//                startActivityForResult(intent, INTENT_REQUEST_CODE);
+                intent.putExtra(EXTRA_INTENT_KEY_ACTION, "insert");
+                startActivity(intent);
             }
         });
 
@@ -115,24 +113,47 @@ public class BellyActivity extends AppCompatActivity {
                         } else {
                             // belly niet in bellylist
                         }
-//                            bellyViewModel.deleteBelly(sBelly, bellyFile);
+                        // Refresh recyclerview
+                        adapter.setBellyList(bellyList);
                     }
                 });
         helper.attachToRecyclerView(recyclerView);
 
-        // verwerken replyIntent vn UpdateBelly vr update
+        // verwerken replyIntent vn UpdateBelly of NewBelly
         Intent newBellyIntent = getIntent();
         if (newBellyIntent.hasExtra(EXTRA_INTENT_KEY_ACTION)) {
-            Belly belly = new Belly(
-                    newBellyIntent.getStringExtra(UpdateBellyMActivity.EXTRA_INTENT_KEY_DATE),
-                    newBellyIntent.getFloatExtra(UpdateBellyMActivity.EXTRA_INTENT_KEY_RADIUS,
-                            0));
-            if (newBellyIntent.getStringExtra(EXTRA_INTENT_KEY_ACTION).equals("update")) {
-                bellyViewModel.updateBelly(
-                        newBellyIntent.getFloatExtra(UpdateBellyMActivity.EXTRA_INTENT_KEY_RADIUS_OLD, 0),
-                        belly,
-                        bellyFile);
+            String action = newBellyIntent.getStringExtra(NewBellyMeasurementActivity.EXTRA_INTENT_KEY_ACTION);
+            if (action.equals("update")){
+                Belly newBelly = new Belly(
+                        newBellyIntent.getStringExtra(UpdateBellyMActivity.EXTRA_INTENT_KEY_DATE),
+                        newBellyIntent.getFloatExtra(UpdateBellyMActivity.EXTRA_INTENT_KEY_RADIUS,
+                                0));
+                int indexToUpdate = newBellyIntent.getIntExtra(UpdateBellyMActivity.EXTRA_INTENT_KEY_INDEX, 0);
+                bellyList.set(indexToUpdate, newBelly);
+                // oude waarde vervangen door nieuwe
+            } else if (action.equals("insert")){
+                // Controleren of datum reeds bestaat
+                Belly newBelly = new Belly(
+                        newBellyIntent.getStringExtra(NewBellyMeasurementActivity.EXTRA_INTENT_KEY_DATE),
+                        newBellyIntent.getFloatExtra(NewBellyMeasurementActivity.EXTRA_INTENT_KEY_RADIUS,
+                                0));
+                if (bestaatBelly(newBelly.getDate(), bellyList)){
+                    Toast.makeText(BellyActivity.this,
+                            "Voor deze datum is er reeds een measurement !",
+                            Toast.LENGTH_LONG).show();
+                }else {
+                    // Toevoegen aan bellyList
+                    bellyList.add(newBelly);
+                }
             }
+            // Wegschrijven nr file
+            if (bellyViewModel.storeBellies(bellyFile, bellyList)) {
+                // Wegschrijven gelukt
+            } else {
+                // Wegschrijven mislukt
+            }
+            // Refresh recyclerview
+            adapter.setBellyList(bellyList);
         }
         if (bellyToestand.getReturnCode() == 100){
             // Er bestaan nog geen bellies, ga naar new BellyActivity
@@ -143,31 +164,13 @@ public class BellyActivity extends AppCompatActivity {
         }
     }
 
-    // verwerken vn replyIntent vn NewBelly vr insert
-    public void onActivityResult(int requestcode, int resultcode, Intent bellyIntent) {
-        // File opnieuw lezen
-        File bellyFile = new File(baseDirectory, BELLY_FILE);
-
-        super.onActivityResult(requestcode, resultcode, bellyIntent);
-
-        if (requestcode == INTENT_REQUEST_CODE && resultcode == RESULT_OK) {
-            Belly belly = new Belly(
-                    bellyIntent.getStringExtra(NewBellyMeasurementActivity.EXTRA_INTENT_KEY_DATE),
-                    bellyIntent.getFloatExtra(NewBellyMeasurementActivity.EXTRA_INTENT_KEY_RADIUS,
-                            0));
-            // Toevoegen aan bellyList
-            bellyList.add(belly);
-            // Wegschrijven nr file
-            if (bellyViewModel.storeBellies(bellyFile, bellyList)) {
-                // Wegschrijven gelukt
-            } else {
-                // Wegschrijven mislukt
-                Toast.makeText(getApplicationContext(),
-                        "inserting new belly failed !", Toast.LENGTH_LONG).show();
+    public boolean bestaatBelly(String date, List<Belly> bellies){
+        for (int i = 0; i < bellies.size(); i++) {
+            if (bellies.get(i).getDate().equals(date)){
+                // belly bestaat reeds
+                return true;
             }
-        } else {
-            Toast.makeText(getApplicationContext(),
-                    "empty reply from New Belly activity or cancel", Toast.LENGTH_LONG).show();
         }
+        return false;
     }
 }

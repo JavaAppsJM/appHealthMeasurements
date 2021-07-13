@@ -122,11 +122,14 @@ public class BellyRepository{
     }
 
     public boolean storeBellies(File bellyFile, List<Belly> bellyList){
+        // Sorteren bellies
+        List<Belly> sortedBellies = sortBellies(bellyList);
+
         // Wegschrijven nr file
         try {
             PrintWriter outFile = new PrintWriter(bellyFile);
-            for (int i = 0; i < bellyList.size(); i++) {
-                outFile.println(makeFileLine(bellyList.get(i)));
+            for (int i = 0; i < sortedBellies.size(); i++) {
+                outFile.println(makeFileLine(sortedBellies.get(i)));
             }
             outFile.close();
             return true;
@@ -134,6 +137,21 @@ public class BellyRepository{
             e.printStackTrace();
             return false;
         }
+    }
+
+    public List<Belly> sortBellies(List<Belly> bellies){
+        // TODO: Sortering corrigeren
+        Belly tmpBelly = new Belly();
+        for (int j = 0; j < bellies.size()-1; j++) {
+            for (int i = bellies.size()-2 ; i >= j ; i--) {
+                if (bellies.get(i).getDateInt() < bellies.get(i+1).getDateInt()){
+                    tmpBelly.setBelly(bellies.get(i));
+                    bellies.get(i).setBelly(bellies.get(i+1));
+                    bellies.get(i+1).setBelly(tmpBelly);
+                }
+            }
+        }
+        return bellies;
     }
 
     public boolean bellyListNrFile(File bellyFile){

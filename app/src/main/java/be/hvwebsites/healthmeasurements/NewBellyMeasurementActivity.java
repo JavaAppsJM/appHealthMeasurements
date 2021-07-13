@@ -42,11 +42,11 @@ public class NewBellyMeasurementActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 // replyintent vr startActivityForResult
-                Intent replyIntent = new Intent();
-                // replyintent vr gewone startActivity is niet meer nodig
-                // je kan NewBelly niet gebruiken vr update vermits datum niet mag wijzigen !!
-                //Intent replyIntent = new Intent(NewBellyMeasurementActivity.this,
-                //        BellyActivity.class);
+                //Intent replyIntent = new Intent();
+                // Gewone startactivity dan kan de reply in de onCreate verwerkt worden
+                // dit om de refresh vd adapter te kunnen doen
+                Intent replyIntent = new Intent(NewBellyMeasurementActivity.this,
+                        BellyActivity.class);
                 if (TextUtils.isEmpty(dateView.getText()) ||
                 TextUtils.isEmpty(radiusView.getText())){
                     Toast.makeText(NewBellyMeasurementActivity.this,
@@ -56,33 +56,20 @@ public class NewBellyMeasurementActivity extends AppCompatActivity {
                     Belly belly = new Belly(dateString,
                             Float.parseFloat(String.valueOf(radiusView.getText())));
                     Toast.makeText(NewBellyMeasurementActivity.this,
-                            "New belly measurement saved ! " + belly.toString(),
+                            "New belly measurement : " + belly.toString(),
                             Toast.LENGTH_LONG).show();
                     replyIntent.putExtra(EXTRA_INTENT_KEY_DATE, dateString);
                     replyIntent.putExtra(EXTRA_INTENT_KEY_RADIUS,
                             Float.parseFloat(String.valueOf(radiusView.getText())));
                     // Bepalen of er moet geupdate of geinsert worden obv wat er via de intent binnenkomt
                     // is niet langer nodig gezien update niet langs hier mag komen !!
-//                    Intent intentAction = getIntent();
-//                    replyIntent.putExtra(EXTRA_INTENT_KEY_ACTION,
-//                            intentAction.getStringExtra(EXTRA_INTENT_KEY_ACTION));
-                    //startActivity(replyIntent);
+                    // Intent intentAction = getIntent();
                     // setResult vr startActivityForResult
-                    setResult(RESULT_OK, replyIntent);
+                    //setResult(RESULT_OK, replyIntent);
+                    replyIntent.putExtra(EXTRA_INTENT_KEY_ACTION, "insert");
+                    startActivity(replyIntent);
                 }
-                finish();
-            }
-        });
-        final Button cancelAddButton = findViewById(R.id.cancel_add);
-        cancelAddButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // replyintent vr startActivityForResult
-                Intent replyIntent = new Intent();
-                Toast.makeText(NewBellyMeasurementActivity.this,
-                        "Add New Belly Measurement cancelled by user !", Toast.LENGTH_LONG).show();
-                setResult(RESULT_CANCELED, replyIntent);
-                finish();
+                //finish();
             }
         });
     }

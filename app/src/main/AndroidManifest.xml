@@ -29,13 +29,15 @@
         </activity>
         <activity
             android:name=".BellyActivity"
-            android:label="@string/title_activity_belly"
             android:parentActivityName=".MainActivity"
-            android:theme="@style/Theme.HealthMeasurements.NoActionBar">
+            android:label="@string/title_activity_belly">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="be.hvwebsites.healthmeasurements.MainActivity" />
+                android:value=".MainActivity" />
         </activity>
+
+<!--        android:theme="@style/Theme.HealthMeasurements.NoActionBar"-->
+
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

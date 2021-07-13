@@ -25,6 +25,8 @@ public class BellyListAdapter extends RecyclerView.Adapter<BellyListAdapter.Bell
             "be.hvwebsites.healthmeasurements.INTENT_KEY_DATE";
     public static final String EXTRA_INTENT_KEY_RADIUS =
             "be.hvwebsites.healthmeasurements.INTENT_KEY_RADIUS";
+    public static final String EXTRA_INTENT_KEY_INDEX =
+            "be.hvwebsites.healthmeasurements.INTENT_KEY_INDEX";
     public static final String EXTRA_INTENT_KEY_ACTION =
             "be.hvwebsites.healthmeasurements.INTENT_KEY_ACTION";
 
@@ -49,12 +51,14 @@ public class BellyListAdapter extends RecyclerView.Adapter<BellyListAdapter.Bell
         public void onClick(View v) {
             // er is geclicked op een Belly, dit betekent dat er nr detail vd Belly vr evt update wordt gegaan
             // daarvoor gaan we nr een de update activity
-            Belly current = bellyList.get(getAdapterPosition());
+            int indexToUpdate = getAdapterPosition();
+            Belly current = bellyList.get(indexToUpdate);
 
             Intent intent = new Intent(mContext, UpdateBellyMActivity.class);
             intent.putExtra(EXTRA_INTENT_KEY_ACTION, "update");
             intent.putExtra(EXTRA_INTENT_KEY_DATE, current.getFormatDate());
             intent.putExtra(EXTRA_INTENT_KEY_RADIUS, current.getBellyRadius());
+            intent.putExtra(EXTRA_INTENT_KEY_INDEX, indexToUpdate);
             mContext.startActivity(intent);
         }
     }

@@ -82,6 +82,13 @@ public class Belly {
         this.dateInt = dateInt;
     }
 
+    public void setBelly(Belly belly2){
+        this.date = belly2.getDate();
+        this.bellyRadius = belly2.getBellyRadius();
+        this.dateInt = belly2.getDateInt();
+        this.remark = belly2.getRemark();
+    }
+
     @Override
     public String toString() {
         return "Belly{" +

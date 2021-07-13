@@ -17,14 +17,15 @@ public class UpdateBellyMActivity extends AppCompatActivity {
     private TextView dateView;
     private EditText radiusView;
     private Belly oldBelly;
+    private int indexToUpdate;
     public static final String EXTRA_INTENT_KEY_ACTION =
             "be.hvwebsites.healthmeasurements.INTENT_KEY_ACTION";
     public static final String EXTRA_INTENT_KEY_DATE =
             "be.hvwebsites.healthmeasurements.INTENT_KEY_DATE";
     public static final String EXTRA_INTENT_KEY_RADIUS =
             "be.hvwebsites.healthmeasurements.INTENT_KEY_RADIUS";
-    public static final String EXTRA_INTENT_KEY_RADIUS_OLD =
-            "be.hvwebsites.healthmeasurements.INTENT_KEY_RADIUS_OLD";
+    public static final String EXTRA_INTENT_KEY_INDEX =
+            "be.hvwebsites.healthmeasurements.INTENT_KEY_INDEX";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +44,7 @@ public class UpdateBellyMActivity extends AppCompatActivity {
                     bellyIntent.getFloatExtra(EXTRA_INTENT_KEY_RADIUS, 0));
             dateView.setText(oldBelly.getFormatDate());
             radiusView.setText(String.valueOf(oldBelly.getBellyRadius()));
+            indexToUpdate = bellyIntent.getIntExtra(EXTRA_INTENT_KEY_INDEX, 0);
         }
 
         // Scherm velden vervolg
@@ -69,13 +71,11 @@ public class UpdateBellyMActivity extends AppCompatActivity {
                     replyIntent.putExtra(EXTRA_INTENT_KEY_DATE, dateString);
                     replyIntent.putExtra(EXTRA_INTENT_KEY_RADIUS,
                             Float.parseFloat(String.valueOf(radiusView.getText())));
-                    replyIntent.putExtra(EXTRA_INTENT_KEY_RADIUS_OLD,
-                            oldBelly.getBellyRadius());
+                    replyIntent.putExtra(EXTRA_INTENT_KEY_INDEX, indexToUpdate);
                     replyIntent.putExtra(EXTRA_INTENT_KEY_ACTION, "update");
                     startActivity(replyIntent);
                 }
             }
         });
-
     }
 }
