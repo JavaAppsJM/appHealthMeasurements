@@ -5,37 +5,34 @@ import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
-import java.math.BigDecimal;
-import java.time.LocalDate;
-
-public class Belly {
+@Entity(tableName = "belly_radius")
+public class Bellydb {
+    @PrimaryKey
+    @NonNull
+    @ColumnInfo(name = "date")
     private String date;
+    @NonNull
+    @ColumnInfo(name = "bellyradius")
     private float bellyRadius;
+    @ColumnInfo(name = "remark")
     private String remark; // initieel niet gebruikt
+    @ColumnInfo(name = "dateint")
     private int dateInt;
 
-    public Belly() {
-    }
-
-    public Belly(String inputDate, float bellyRadius) {
-        setDate(trimDate(inputDate));
-        this.bellyRadius = bellyRadius;
-    }
-
-    private String trimDate(String inputDate){
-        String[] dateStringParts = inputDate.split("/");
-        String day = leadingZero(dateStringParts[0]);
-        String month = leadingZero(dateStringParts[1]);
+    public Bellydb(String date, float bellyRadius) {
+        String[] dateStringParts = date.split("/");
+        String day = this.leadingZero(dateStringParts[0]);
+        String month = this.leadingZero(dateStringParts[1]);
         String year = dateStringParts[2];
-        return day + month + year;
+        this.date = day + month + year;
+        this.bellyRadius = bellyRadius;
+        this.dateInt = Integer.parseInt(year + month + day);
     }
 
-    public void setDate(@NonNull String date) {
-        this.date = date;
-        this.dateInt = Integer.parseInt(date.substring(4) + date.substring(2,4) + date.substring(0,2));
+    public Bellydb() {
     }
 
-    private String leadingZero(String string){
+    public String leadingZero(String string){
         if (Integer.parseInt(string) < 10 && string.length() < 2){
             return  "0" + string;
         }else {
@@ -65,6 +62,11 @@ public class Belly {
         this.remark = remark;
     }
 
+    public void setDate(@NonNull String date) {
+        this.date = date;
+        this.dateInt = Integer.parseInt(date.substring(4) + date.substring(2,4) + date.substring(0,2));
+    }
+
     public void setBellyRadius(float bellyRadius) {
         this.bellyRadius = bellyRadius;
     }
@@ -77,7 +79,7 @@ public class Belly {
         this.dateInt = dateInt;
     }
 
-    public void setBelly(Belly belly2){
+    public void setBelly(Bellydb belly2){
         this.date = belly2.getDate();
         this.bellyRadius = belly2.getBellyRadius();
         this.dateInt = belly2.getDateInt();

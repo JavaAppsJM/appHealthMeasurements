@@ -21,16 +21,15 @@ import be.hvwebsites.healthmeasurements.files.BellyFile;
 import be.hvwebsites.healthmeasurements.returnInfo.ReturnInfo;
 
 public class BellyRepository{
-    private LiveData<List<Belly>> bellyList;
     private Belly latestBelly;
     private Belly readBelly;
     private List<Belly> tmpBellyList;
-    private int maxDateInt;
 
     public BellyRepository(){
         tmpBellyList = new ArrayList<>();
     }
 
+    // TODO: Kan initialize niet bij constructor ?
     public ReturnInfo initializeRepository(File bellyFile){
         ReturnInfo bellyToestand = fileNrBellyList(bellyFile);
         if (bellyToestand.getReturnCode() == 0){
@@ -98,27 +97,8 @@ public class BellyRepository{
         return belly;
     }
 
-    public LiveData<List<Belly>> getBellyList() {
-        return bellyList;
-    }
-
     public Belly getLatestBelly(){
         return latestBelly;
-    }
-
-    public boolean insertBelly(Belly belly, File bellyFile){
-        // Toevoegen aan bellylist
-        tmpBellyList.add(belly);
-//        bellyList = (LiveData<List<Belly>>) tmpBellyList;
-
-        // Wegschrijven nr file
-        if (bellyListNrFile(bellyFile)){
-            // Wegschrijven gelukt
-            return true;
-        }else {
-            // Wegschrijven mislukt
-            return false;
-        }
     }
 
     public boolean storeBellies(File bellyFile, List<Belly> bellyList){
@@ -140,7 +120,6 @@ public class BellyRepository{
     }
 
     public List<Belly> sortBellies(List<Belly> bellies){
-        // TODO: Sortering corrigeren
         Belly tmpBelly = new Belly();
         for (int j = 0; j < bellies.size()-1; j++) {
             for (int i = bellies.size()-2 ; i >= j ; i--) {
@@ -154,62 +133,9 @@ public class BellyRepository{
         return bellies;
     }
 
-    public boolean bellyListNrFile(File bellyFile){
-        // Wegschrijven nr file
-        if (bellyFile.exists()){
-            try {
-                PrintWriter outFile = new PrintWriter(bellyFile);
-                for (int i = 0; i < tmpBellyList.size(); i++) {
-                    outFile.println(makeFileLine(tmpBellyList.get(i)));
-                }
-                outFile.close();
-                return true;
-            } catch (FileNotFoundException e){
-                e.printStackTrace();
-                return false;
-            }
-        } else {
-            return false;
-        }
-    }
-
     public String makeFileLine(Belly belly){
         String fileLine = "<date><" + belly.getDate()
                 + "><bellyRadius><" + String.valueOf(belly.getBellyRadius()) + ">";
         return fileLine;
     }
-
-    public boolean deleteBelly(Belly belly, File bellyFile){
-        // Zoek belly in bellylist
-        if (tmpBellyList.remove(belly)){
-            // belly is uit de belly list
-            // Wegschrijven nr file
-            if (bellyListNrFile(bellyFile)){
-                // Wegschrijven gelukt
-                return true;
-            }else {
-                // Wegschrijven mislukt
-                return false;
-            }
-        }else {
-            // belly niet in bellylist
-            return true;
-        }
-    }
-
-    public boolean updateBelly(Float oldRadius, Belly newBelly, File bellyFile){
-        // Maak oldBelly van oldRadius en newBelly
-        Belly oldBelly = new Belly(newBelly.getDate(), oldRadius);
-        // Vervang oldBelly met newBelly in bellyList
-        tmpBellyList.set(tmpBellyList.indexOf(oldBelly), newBelly);
-        // Wegschrijven nr file
-        if (bellyListNrFile(bellyFile)){
-            // Wegschrijven gelukt
-            return true;
-        }else {
-            // Wegschrijven mislukt
-            return false;
-        }
-    }
-
 }

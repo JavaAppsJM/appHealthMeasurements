@@ -1,26 +1,21 @@
 package be.hvwebsites.healthmeasurements.repositories;
 
 import android.app.Application;
-import android.os.Environment;
 
 import androidx.lifecycle.LiveData;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.PrintWriter;
 import java.util.List;
-import java.util.Scanner;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import be.hvwebsites.healthmeasurements.dao.BellyDAO;
 import be.hvwebsites.healthmeasurements.database.BellyDB;
-import be.hvwebsites.healthmeasurements.entities.Belly;
+import be.hvwebsites.healthmeasurements.entities.Bellydb;
 
 public class BellyRepositoryDB {
     private BellyDAO bellyDAO;
-    private LiveData<List<Belly>> bellyList;
-    private Belly latestBelly;
+    private LiveData<List<Bellydb>> bellyList;
+    private Bellydb latestBelly;
     private int maxDateInt;
     private ExecutorService executor = Executors.newFixedThreadPool(5);
 
@@ -33,11 +28,11 @@ public class BellyRepositoryDB {
         latestBelly = bellyDAO.getLatestBelly(maxDateInt);
     }
 
-    public LiveData<List<Belly>> getBellyList() {
+    public LiveData<List<Bellydb>> getBellyList() {
         return bellyList;
     }
 
-    public Belly getLatestBelly(){
+    public Bellydb getLatestBelly(){
         return latestBelly;
 
 
@@ -70,15 +65,15 @@ public class BellyRepositoryDB {
 */
 
     // insert nr DB
-    public void insertBelly(Belly belly){
+    public void insertBelly(Bellydb belly){
         executor.submit(new insertBellyAsyncTask(bellyDAO, belly));
     }
 
     public class insertBellyAsyncTask implements Runnable{
         private BellyDAO mAsyncBellyDao;
-        private Belly belly;
+        private Bellydb belly;
 
-        insertBellyAsyncTask(BellyDAO dao, Belly belly){
+        insertBellyAsyncTask(BellyDAO dao, Bellydb belly){
             mAsyncBellyDao = dao;
             this.belly = belly;
         }
@@ -89,15 +84,15 @@ public class BellyRepositoryDB {
         }
     }
 
-    public void deleteBelly(Belly belly){
+    public void deleteBelly(Bellydb belly){
         executor.submit(new deleteBellyAsyncTask(bellyDAO, belly));
     }
 
     public class deleteBellyAsyncTask implements Runnable{
         private BellyDAO mAsyncBellyDao;
-        private Belly belly;
+        private Bellydb belly;
 
-        deleteBellyAsyncTask(BellyDAO dao, Belly belly){
+        deleteBellyAsyncTask(BellyDAO dao, Bellydb belly){
             mAsyncBellyDao = dao;
             this.belly = belly;
         }
@@ -108,15 +103,15 @@ public class BellyRepositoryDB {
         }
     }
 
-    public void updateBelly(Belly newBelly){
+    public void updateBelly(Bellydb newBelly){
         executor.submit(new updateBellyAsyncTask(bellyDAO, newBelly));
     }
 
     public class updateBellyAsyncTask implements Runnable{
         private BellyDAO mAsyncBellyDao;
-        private Belly newBelly;
+        private Bellydb newBelly;
 
-        updateBellyAsyncTask(BellyDAO dao, Belly newBelly){
+        updateBellyAsyncTask(BellyDAO dao, Bellydb newBelly){
             mAsyncBellyDao = dao;
             this.newBelly = newBelly;
         }

@@ -66,7 +66,7 @@ public class UpdateBellyMActivity extends AppCompatActivity {
                     Belly belly = new Belly(dateString,
                             Float.parseFloat(String.valueOf(radiusView.getText())));
                     Toast.makeText(UpdateBellyMActivity.this,
-                            "Updated belly measurement saved ! " + belly.toString(),
+                            "Updated belly measurement: " + belly.toString(),
                             Toast.LENGTH_LONG).show();
                     replyIntent.putExtra(EXTRA_INTENT_KEY_DATE, dateString);
                     replyIntent.putExtra(EXTRA_INTENT_KEY_RADIUS,

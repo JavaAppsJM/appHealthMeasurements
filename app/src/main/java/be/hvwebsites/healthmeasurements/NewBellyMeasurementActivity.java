@@ -29,7 +29,6 @@ public class NewBellyMeasurementActivity extends AppCompatActivity {
             "be.hvwebsites.healthmeasurements.INTENT_KEY_DATE";
     public static final String EXTRA_INTENT_KEY_RADIUS =
             "be.hvwebsites.healthmeasurements.INTENT_KEY_RADIUS";
-//    private BellyViewModel bellyViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

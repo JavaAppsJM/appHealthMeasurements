@@ -11,9 +11,10 @@ import androidx.sqlite.db.SupportSQLiteDatabase;
 
 import be.hvwebsites.healthmeasurements.dao.BellyDAO;
 import be.hvwebsites.healthmeasurements.entities.Belly;
+import be.hvwebsites.healthmeasurements.entities.Bellydb;
 import be.hvwebsites.healthmeasurements.typeconverters.DBTypeConverters;
 
-@Database(entities = {Belly.class}, version = 2, exportSchema = false)
+@Database(entities = {Bellydb.class}, version = 2, exportSchema = false)
 @TypeConverters({DBTypeConverters.class})
 public abstract class BellyDB extends RoomDatabase {
     public abstract BellyDAO bellyDAO();

@@ -16,7 +16,6 @@ import be.hvwebsites.healthmeasurements.returnInfo.ReturnInfo;
 
 public class BellyViewModel extends AndroidViewModel {
     private BellyRepository repository;
-    private File bellyFile;
     private LiveData<List<Belly>> bellyList;
     private List<Belly> tBellyList = new ArrayList<>();
     private Belly latestBelly;
@@ -45,35 +44,11 @@ public class BellyViewModel extends AndroidViewModel {
         }
     }
 
-    public void setBellyFile(File bellyFile) {
-        this.bellyFile = bellyFile;
-    }
-
     public List<Belly> gettBellyList() {
         return tBellyList;
     }
 
     public LiveData<List<Belly>> getBellyList() {
         return bellyList;
-    }
-
-    public boolean insertBelly(Belly belly, File bellyFile){
-        if (repository.insertBelly(belly, bellyFile)){
-            return true;
-        }else {
-            return false;
-        }
-    }
-
-    public void deleteBelly(Belly belly, File bellyFile){
-        repository.deleteBelly(belly, bellyFile);
-    }
-
-    public void updateBelly(Float oldRadius, Belly belly, File bellyFile){
-        repository.updateBelly(oldRadius, belly,bellyFile);
-    }
-
-    public Belly getLatestBelly(){
-        return latestBelly;
     }
 }
